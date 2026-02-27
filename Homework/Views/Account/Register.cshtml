@@ -1,0 +1,32 @@
+﻿@model User
+<h2>Регистрация нового пользователя</h2>
+
+<div class="row">
+	<div class="col-md-5">
+		<form asp-action="Register" method="post">
+			<div class="form-group mb-3">
+				<label>Email</label>
+				<input asp-for="Email" class="form-control" type="email" required />
+			</div>
+            
+			<div class="form-group mb-3">
+				<label>Пароль</label>
+				<input name="password" class="form-control" type="password" required />
+			</div>
+
+			<div class="form-group mb-3">
+				<label>Возраст</label>
+				<input asp-for="Age" class="form-control" type="number" />
+				<small class="text-muted">Необходим для доступа к разделам 18+</small>
+			</div>
+
+			<div class="form-group mb-3">
+				<label>Компания</label>
+				<input asp-for="Company" class="form-control" placeholder="Например: IT-Sphere" />
+			</div>
+
+			<button type="submit" class="btn btn-success">Создать аккаунт</button>
+		</form>
+		<p class="mt-3">Уже есть аккаунт? <a href="/Account/Login">Войти</a></p>
+	</div>
+</div>

@@ -1,0 +1,22 @@
+﻿@{
+	var age = User.FindFirst("Age")?.Value;
+	var company = User.FindFirst("Company")?.Value;
+}
+
+<h2>Профиль пользователя</h2>
+<div class="card">
+	<div class="card-body">
+		<p><strong>Ваш возраст:</strong> @age</p>
+		<p><strong>Компания:</strong> @company</p>
+        
+		@if (int.Parse(age ?? "0") >= 18)
+		{
+			<div class="alert alert-success">Вам доступен контент 18+</div>
+		}
+        
+		@if (company == "IT-Sphere")
+		{
+			<div class="alert alert-info">Вы имеете доступ к корпоративному разделу компании IT-Sphere</div>
+		}
+	</div>
+</div>

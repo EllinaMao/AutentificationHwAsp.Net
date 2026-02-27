@@ -1,25 +1,54 @@
+using Homework.Interfaces;
 using Homework.Models;
+using Homework.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using System.Security.Claims;
 
-namespace Homework.Controllers
+public class AccountController : Controller
 {
-    public class HomeController : Controller
+    private readonly IUser _userRepo;
+    public AccountController(IUser userRepo) => _userRepo = userRepo;
+    [HttpGet]
+    public IActionResult Register()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
+    }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+    [HttpPost]
+    public async Task<IActionResult> Register(User user, string password)
+    {
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        await _userRepo.RegisterAsync(user, password);
+
+
+        return RedirectToAction(nameof (Login));
+    }
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        var user = await _userRepo.GetUserAsync(model.Email, model.Password);
+        if (user != null)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("Age", user.Age.ToString()),
+                new Claim("Company", user.Company)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+
+            return RedirectToAction(nameof(Index), "Tasks");
         }
+        return View();
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction(nameof(Login));
     }
 }

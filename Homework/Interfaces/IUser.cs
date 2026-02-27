@@ -2,10 +2,9 @@
 
 namespace Homework.Interfaces
 {
-    public interface IUserRepository
+    public interface IUser
     {
         Task<User> GetUserAsync(string email, string password);
-        Task RegisterAsync(User user);
-        Task<User> GetByIdAsync(int id);
+        Task RegisterAsync(User user, string password);
     }
 }
