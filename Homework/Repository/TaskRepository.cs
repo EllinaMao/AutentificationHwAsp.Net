@@ -44,4 +44,16 @@ public class TaskRepository : ITask
             await _db.SaveChangesAsync();
         }
     }
+
+    public async Task<List<TaskItem>> GetTasksByStatusAsync(int userId, bool isDone, string search)
+    {
+        var query = _db.Tasks.Where(t => t.UserId == userId && t.IsDone == isDone);
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(t => t.Title.Contains(search));
+        }
+        return await query.ToListAsync();
+    }
+
+
 }

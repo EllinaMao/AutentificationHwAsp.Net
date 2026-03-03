@@ -2,13 +2,18 @@
 <h2>Мои заметки</h2>
 
 <div class="row mb-4">
-	<div class="col-md-6">
+	<div class="col-md-8">
 		<form method="get" asp-action="Index" class="d-flex">
-			<input type="text" name="search" class="form-control me-2" placeholder="Поиск по названию..." />
+			<input type="text" name="search" class="form-control me-2" placeholder="Поиск по названию..." value="@Context.Request.Query["search"]" />
+			<select name="isDone" class="form-select me-2" style="width: auto;">
+				<option value="">Все задачи</option>
+				<option value="false" selected="@(Context.Request.Query["isDone"] == "false")">Незавершенные</option>
+				<option value="true" selected="@(Context.Request.Query["isDone"] == "true")">Завершенные</option>
+			</select>
 			<button type="submit" class="btn btn-secondary">Найти</button>
 		</form>
 	</div>
-	<div class="col-md-6 text-end">
+	<div class="col-md-4 text-end">
 		@if (User.FindFirst("Company")?.Value == "Step")
 		{
 			<a asp-action="CorporateDocs" class="btn btn-info me-2">Корпоративные документы</a>

@@ -14,9 +14,19 @@ public class TasksController : Controller
 
     private int CurrentUserId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-    public async Task<IActionResult> Index(string search)
+    public async Task<IActionResult> Index(string search, bool? isDone)
     {
-        var tasks = await _taskRepo.GetTasksAsync(CurrentUserId, search);
+        List<TaskItem> tasks;
+
+        if (isDone.HasValue)
+        {
+            tasks = await _taskRepo.GetTasksByStatusAsync(CurrentUserId, isDone.Value, search);
+        }
+        else
+        {
+            tasks = await _taskRepo.GetTasksAsync(CurrentUserId, search);
+        }
+
         return View(tasks);
     }
 
