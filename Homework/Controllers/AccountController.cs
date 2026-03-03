@@ -25,8 +25,16 @@ public class AccountController : Controller
 
         return RedirectToAction(nameof (Login));
     }
+
+    [HttpGet]
+    public IActionResult Login(string returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
+
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
     {
         var user = await _userRepo.GetUserAsync(model.Email, model.Password);
         if (user != null)
@@ -41,8 +49,13 @@ public class AccountController : Controller
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
             return RedirectToAction(nameof(Index), "Tasks");
         }
+        ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
