@@ -34,4 +34,14 @@ public class TaskRepository : ITask
             await _db.SaveChangesAsync();
         }
     }
+
+    public async Task ToggleTaskStatusAsync(int taskId, int userId)
+    {
+        var task = await _db.Tasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+        if (task != null)
+        {
+            task.IsDone = !task.IsDone;
+            await _db.SaveChangesAsync();
+        }
+    }
 }

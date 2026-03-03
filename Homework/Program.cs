@@ -20,13 +20,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7); 
+        options.SlidingExpiration = true; 
+        options.Cookie.HttpOnly = true; 
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+        options.Cookie.SameSite = SameSiteMode.Lax; 
+        options.Cookie.Name = "HomeworkAuth"; 
     });
 
 //t3
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("CompanyEmployee", policy =>
-        policy.RequireClaim("Company", "IT-Sphere"));
+        policy.RequireClaim("Company", "Step"));
 
     options.AddPolicy("AdultOnly", policy =>
         policy.RequireAssertion(context =>

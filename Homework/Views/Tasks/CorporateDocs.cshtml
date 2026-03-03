@@ -1,0 +1,28 @@
+@{
+	ViewData["Title"] = "Корпоративные документы";
+}
+
+<h2>Корпоративный раздел IT-Sphere</h2>
+
+<div class="alert alert-info">
+	<strong>Внимание!</strong> Эта страница доступна только сотрудникам компании Step.
+</div>
+
+<div class="card">
+	<div class="card-body">
+		<h4>Внутренние документы компании</h4>
+		<p>Здесь размещаются документы и информация, доступные только для сотрудников Step.</p>
+		<ul class="list-group mt-3">
+			<li class="list-group-item"> Корпоративная политика безопасности</li>
+			<li class="list-group-item"> Квартальные отчеты</li>
+			<li class="list-group-item"> Регламенты и инструкции</li>
+			<li class="list-group-item"> Стратегический план развития</li>
+			<li class="list-group-item"> Контакты руководства</li>
+		</ul>
+		<p class="text-muted mt-3">Ваша компания: @User.FindFirst("Company")?.Value</p>
+	</div>
+</div>
+
+<div class="mt-3">
+	<a asp-action="Index" class="btn btn-primary">Вернуться к задачам</a>
+</div>

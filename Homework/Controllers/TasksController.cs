@@ -1,5 +1,7 @@
+using Homework.Extensions;
 using Homework.Interfaces;
 using Homework.Models;
+using Homework.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -19,13 +21,36 @@ public class TasksController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TaskItem task)
+    public async Task<IActionResult> Create(TaskItemViewModel viewModel)
     {
-        task.UserId = CurrentUserId;
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Index");
+        }
+
+        var task = viewModel.ToTaskItem(CurrentUserId);
+
         await _taskRepo.AddTaskAsync(task);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _taskRepo.DeleteTaskAsync(id, CurrentUserId);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ToggleStatus(int id)
+    {
+        await _taskRepo.ToggleTaskStatusAsync(id, CurrentUserId);
         return RedirectToAction("Index");
     }
 
     [Authorize(Policy = "CompanyEmployee")]
     public IActionResult CorporateDocs() => View();
+
+    [Authorize(Policy = "AdultOnly")]
+    public IActionResult AdultContent() => View();
 }

@@ -6,5 +6,6 @@ namespace Homework.Interfaces
     {
         Task<User> GetUserAsync(string email, string password);
         Task RegisterAsync(User user, string password);
+        Task<bool> EmailExistsAsync(string email);
     }
 }

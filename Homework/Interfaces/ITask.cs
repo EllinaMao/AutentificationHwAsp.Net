@@ -7,5 +7,6 @@ namespace Homework.Interfaces
         Task<List<TaskItem>> GetTasksAsync(int userId, string search);
         Task AddTaskAsync(TaskItem task);
         Task DeleteTaskAsync(int taskId, int userId);
+        Task ToggleTaskStatusAsync(int taskId, int userId);
     }
 }
